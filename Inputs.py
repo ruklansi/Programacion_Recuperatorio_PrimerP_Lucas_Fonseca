@@ -22,23 +22,23 @@ def validar_nombre() -> str:
         print("El nombre debe tener al menos 3 caracteres y solo contener letras y espacios.")
 
 def validar_puntaje() -> int:
-    while True:
-        try:
-            puntaje = int(input("Ingrese el puntaje entre (1-10): "))
+   while True:
+        entrada = input("Ingrese el puntaje (1-10): ")
+        es_entero = True
+        if len(entrada) == 0:
+            es_entero = False
+        else:
+            for c in entrada:
+                if not ('0' <= c <= '9'):
+                    es_entero = False
+                    break
+        if es_entero:
+            puntaje = 0
+            for c in entrada:
+                puntaje = puntaje * 10 + (ord(c) - ord('0'))
             if 1 <= puntaje <= 10:
                 return puntaje
             else:
-                print("El puntaje debe estar entre 1 y 10.")
-        except ValueError:
-            print("Entrada inválida. Por favor, ingrese un número entero entre 1 y 10.")
-
-def validar_opcion_menu(max_opcion: int) -> int:
-    while True:
-        try:
-            opcion = int(input(f"Ingrese una opción (1-{max_opcion}): "))
-            if 1 <= opcion <= max_opcion:
-                return opcion
-            else:
-                print(f"Por favor, ingrese un número entre 1 y {max_opcion}.")
-        except ValueError:
-            print("Entrada inválida. Por favor, ingrese un número entero.")
+                print("Error: El puntaje debe estar entre 1 y 10.")
+        else:
+            print("Error: Ingrese un número entero.")

@@ -1,7 +1,13 @@
 import random
 from Inputs import *
 
+from Inputs import validar_nombre
+from Inputs import validar_puntaje
+
 def crear_matriz(cantidad_filas: int, cantidad_columnas: int, valor_inicial: any) -> list:
+    """
+    Crea una matriz de filas x columnas con un valor inicial.
+    """
     matriz = []
     for i in range(cantidad_filas):
         fila = [valor_inicial] * cantidad_columnas
@@ -9,40 +15,59 @@ def crear_matriz(cantidad_filas: int, cantidad_columnas: int, valor_inicial: any
     return matriz
 
 def crear_array(cantidad_elementos: int, valor_inicial: any) -> list:
+    """
+    Crea un array de tamaño especificado con un valor inicial.
+    """
     array = [valor_inicial] * cantidad_elementos
     return array
 
 def mostrar_array(array: list) -> None:
+    """
+    Muestra los elementos de un array.
+    """
     for i in range(len(array)):
         print(f"{array[i]}")
 
 def mostrar_matriz(matriz: list) -> None:
-    for fila in range(len(matriz)):
-        for columna in range(len(matriz[fila])):
-            print(f"{matriz[fila][columna]}", end=" ")
+    """
+    Muestra los elementos de una matriz.
+    """
+    for fil in range(len(matriz)):
+        for col in range(len(matriz[fil])):
+            print(f"{matriz[fil][col]}", end=" ")
         print("")
 
-def sumar_fila(matriz_numerica: list, indice_fila: int) -> int:
+def sumar_fila(matriz_numerica, indice_fila):
     suma_fila = 0
-    for columna in range(len(matriz_numerica[0])):
-        suma_fila += matriz_numerica[indice_fila][columna]
+    for col in range(len(matriz_numerica[indice_fila])):
+        suma_fila += int(matriz_numerica[indice_fila][col])  # Convertir a int por si acaso
     return suma_fila
 
-def sumar_matriz(matriz_numerica: list) -> int:
+def sumar_matriz(matriz_numerica: list) -> int | float:
+    """
+    Suma todos los elementos numéricos de la matriz.
+    Asume que los elementos son números (validados en Inputs.py).
+    """
     suma = 0
-    for fila in range(len(matriz_numerica)):
-        for columna in range(len(matriz_numerica[fila])):
-            suma += matriz_numerica[fila][columna]
+    for fil in range(len(matriz_numerica)):
+        for col in range(len(matriz_numerica[fil])):
+            suma += matriz_numerica[fil][col]
     return suma
 
 def calcular_promedio(cantidad_total: float, cantidad_elementos: int) -> float:
+    """
+    Calcula el promedio de una cantidad total entre un número de elementos.
+    Retorna None si cantidad_elementos es 0.
+    """
     if cantidad_elementos != 0:
         return cantidad_total / cantidad_elementos
     return None
 
-# Especificas
-
+# ESPECÍFICAS
 def cargar_nombres_participantes(array_nombres: list) -> bool:
+    """
+    Carga nombres de participantes en el array usando validar_nombre.
+    """    
     if array_nombres != None and len(array_nombres) > 0:
         for i in range(len(array_nombres)):
             nombre = validar_nombre()
@@ -51,22 +76,22 @@ def cargar_nombres_participantes(array_nombres: list) -> bool:
     return False
 
 def cargar_puntajes(matriz_puntajes: list) -> bool:
+    """
+    Carga puntajes de jurados para cada participante usando validar_puntaje.
+    """ 
     if matriz_puntajes != None and len(matriz_puntajes) > 0:
-        for fila in range(len(matriz_puntajes)):
-            print(f"Ingrese los puntajes para la fila {fila + 1}:")
-            for columna in range(len(matriz_puntajes[fila])):
-                if columna == 0:
-                    print("Ingrese puntaje jurado 1: ")
-                elif columna == 1:
-                    print("Ingrese puntaje jurado 2: ")
-                elif columna == 2:
-                    print("Ingrese puntaje jurado 3: ")
+        for fil in range(len(matriz_puntajes)):
+            print(f"\nCargando puntajes para el participante {fil + 1}:")
+            for col in range(len(matriz_puntajes[fil])):
                 puntaje = validar_puntaje()
-                matriz_puntajes[fila][columna] = puntaje
+                matriz_puntajes[fil][col] = puntaje
         return True
     return False
 
 def mostrar_participante(array_nombres: list, matriz_puntajes: list, indice: int) -> bool:
+    """
+    Muestra los datos de un participante: nombre, puntajes y promedio.
+    """
     if (array_nombres != None and matriz_puntajes != None and
         len(matriz_puntajes) > 0 and len(array_nombres) > 0 and 0 <= indice < len(array_nombres)):
         promedio = calcular_promedio(sumar_fila(matriz_puntajes, indice), len(matriz_puntajes[0]))
@@ -78,6 +103,9 @@ def mostrar_participante(array_nombres: list, matriz_puntajes: list, indice: int
     return False
 
 def mostrar_puntajes(array_nombres: list, matriz_puntajes: list) -> bool:
+    """
+    Muestra los datos de todos los participantes.
+    """
     if (array_nombres != None and matriz_puntajes != None and
         len(matriz_puntajes) > 0 and len(array_nombres) > 0):
         for i in range(len(array_nombres)):
@@ -87,6 +115,9 @@ def mostrar_puntajes(array_nombres: list, matriz_puntajes: list) -> bool:
     return False
 
 def mostrar_participantes_menor_promedio(matriz_puntajes: list, array_nombres: list, promedio_minimo: float) -> bool:
+    """
+    Muestra participantes con promedio menor al especificado.
+    """
     retorno = False
     if (matriz_puntajes != None and array_nombres != None and
         len(matriz_puntajes) > 0 and len(array_nombres) > 0):
@@ -99,150 +130,192 @@ def mostrar_participantes_menor_promedio(matriz_puntajes: list, array_nombres: l
     return retorno
 
 def promedio_por_jurado(matriz_puntajes: list) -> list:
-    if matriz_puntajes != None and len(matriz_puntajes) > 0:
+    """
+    Calcula el promedio de puntajes otorgados por cada jurado.
+    """
+    if matriz_puntajes is not None and len(matriz_puntajes) > 0:
         cantidad_jurados = len(matriz_puntajes[0])
-        array_promedios = crear_array(cantidad_jurados, 0.0)
-        for i in range(cantidad_jurados):
+        promedios = [0] * cantidad_jurados
+        for col in range(cantidad_jurados):
             suma = 0
-            for jurado in range(len(matriz_puntajes)):
-                suma += matriz_puntajes[jurado][i]
-            array_promedios[i] = calcular_promedio(suma, len(matriz_puntajes))
-        return array_promedios
-    return None
+            for fil in range(len(matriz_puntajes)):
+                suma += matriz_puntajes[fil][col]
+            promedio = calcular_promedio(suma, len(matriz_puntajes))
+            # Redondeo manual a 2 decimales
+            promedio_redondeado = int(promedio * 100 + 0.5) / 100
+            promedios[col] = promedio_redondeado
+        return promedios
+    return []
 
 def jurado_mas_estricto(matriz_puntajes: list) -> list:
-    if matriz_puntajes != None and len(matriz_puntajes) > 0:
-        array_promedios = promedio_por_jurado(matriz_puntajes)
-        if array_promedios != None:
-            indice_mas_estricto = 0
-            for i in range(1, len(array_promedios)):
-                if array_promedios[i] < array_promedios[indice_mas_estricto]:
-                    indice_mas_estricto = i
-            return indice_mas_estricto
-    return -1
+    """
+    Retorna los índices de los jurados con menor promedio (puede haber más de uno).
+    """
+    promedios = promedio_por_jurado(matriz_puntajes)
+    if len(promedios) == 0:
+        return []
+    min_promedio = promedios[0]
+    for prom in promedios:
+        if prom < min_promedio:
+            min_promedio = prom
+    return [i + 1 for i in range(len(promedios)) if promedios[i] == min_promedio]
 
 def jurado_mas_generoso(matriz_puntajes: list) -> list:
-    if matriz_puntajes != None and len(matriz_puntajes) > 0:
-        array_promedios = promedio_por_jurado(matriz_puntajes)
-        if array_promedios != None:
-            indice_mas_generoso = 0
-            for i in range(1, len(array_promedios)):
-                if array_promedios[i] > array_promedios[indice_mas_generoso]:
-                    indice_mas_generoso = i
-            return indice_mas_generoso
-    return -1
+    """
+    Retorna los índices de los jurados con mayor promedio (puede haber más de uno).
+    """
+    promedios = promedio_por_jurado(matriz_puntajes)
+    if len(promedios) == 0:
+        return []
+    max_promedio = promedios[0]
+    for prom in promedios:
+        if prom > max_promedio:
+            max_promedio = prom
+    return [i + 1 for i in range(len(promedios)) if promedios[i] == max_promedio]
 
-def mostrar_participantes_puntajes_iguales(array_nombres: list, matriz_puntajes: list) -> bool:
-    encontrados = False
-    if array_nombres and matriz_puntajes:
+def participantes_puntajes_iguales(matriz_puntajes: list, array_nombres: list) -> bool:
+    """
+    Muestra participantes con los mismos puntajes de los tres jurados.
+    """
+    retorno = False
+    if (matriz_puntajes != None and array_nombres != None and
+        len(matriz_puntajes) > 0 and len(array_nombres) > 0):
         for i in range(len(matriz_puntajes)):
             if matriz_puntajes[i][0] == matriz_puntajes[i][1] == matriz_puntajes[i][2]:
                 mostrar_participante(array_nombres, matriz_puntajes, i)
                 print("")
-                encontrados = True
-    if not encontrados:
-        print("No hay participantes con puntajes iguales entre los tres jurados.")
-    return encontrados
+                retorno = True
+    return retorno
 
 def buscar_participante_por_nombre(array_nombres: list, matriz_puntajes: list, nombre: str) -> bool:
-    if array_nombres and matriz_puntajes:
+    """
+    Busca un participante por nombre y muestra sus datos.
+    """
+    if (matriz_puntajes != None and array_nombres != None and
+        len(matriz_puntajes) > 0 and len(array_nombres) > 0):
         for i in range(len(array_nombres)):
             if array_nombres[i].lower() == nombre.lower():
                 mostrar_participante(array_nombres, matriz_puntajes, i)
                 return True
-    print("No existe un participante con ese nombre.")
     return False
 
-def mostrar_top_3_participantes(array_nombres: list, matriz_puntajes: list) -> bool:
-    if array_nombres and matriz_puntajes and len(array_nombres) >= 3:
-        promedios = [0] * len(array_nombres)
+# PUNTOS EXTRA
+def top_3_participantes(array_nombres: list, matriz_puntajes: list) -> bool:
+    """
+    Muestra los 3 participantes con mayor promedio usando ordenamiento manual.
+    (Sin usar append ni métodos de listas)
+    """
+    if (matriz_puntajes != None and array_nombres != None and
+        len(matriz_puntajes) > 0 and len(array_nombres) > 0):
+        # Crear lista de tuplas (índice, promedio) sin append
+        promedios = [None] * len(array_nombres)
         for i in range(len(array_nombres)):
-            promedios[i] = calcular_promedio(sumar_fila(matriz_puntajes, i), len(matriz_puntajes[0]))
-        # Crear lista de índices
-        indices = list(range(len(array_nombres)))
-        # Ordenar índices según los promedios (de mayor a menor)
-        for i in range(len(indices)):
-            for j in range(i + 1, len(indices)):
-                if promedios[indices[j]] > promedios[indices[i]]:
-                    aux = indices[i]
-                    indices[i] = indices[j]
-                    indices[j] = aux
-        print("Top 3 participantes con mayor puntaje promedio:")
-        for k in range(3):
-            mostrar_participante(array_nombres, matriz_puntajes, indices[k])
+            promedio = calcular_promedio(sumar_fila(matriz_puntajes, i), len(matriz_puntajes[0]))
+            promedios[i] = (i, promedio)
+        
+        # Ordenamiento burbujeo (descendente por promedio)
+        for i in range(len(promedios)):
+            for j in range(len(promedios) - i - 1):
+                if promedios[j][1] < promedios[j + 1][1]:
+                    promedios[j], promedios[j + 1] = promedios[j + 1], promedios[j]
+        
+        # Mostrar hasta 3 participantes
+        cantidad = 3 if len(promedios) > 3 else len(promedios)
+        for i in range(cantidad):
+            mostrar_participante(array_nombres, matriz_puntajes, promedios[i][0])
             print("")
         return True
-    print("No hay suficientes participantes para mostrar el Top 3.")
     return False
 
 def participantes_ordenados_alfabeticamente(array_nombres: list, matriz_puntajes: list) -> bool:
+    """
+    Muestra los participantes ordenados alfabéticamente con sus datos usando ordenamiento manual.
+    """
     if (matriz_puntajes != None and array_nombres != None and
         len(matriz_puntajes) > 0 and len(array_nombres) > 0):
+        # Crear lista de índices
         indices = list(range(len(array_nombres)))
-
+        
+        # Ordenamiento burbujeo (alfabético por nombre)
         for i in range(len(indices)):
             for j in range(len(indices) - i - 1):
                 if array_nombres[indices[j]].lower() > array_nombres[indices[j + 1]].lower():
                     indices[j], indices[j + 1] = indices[j + 1], indices[j]
-
+        
+        # Mostrar participantes en orden
         for i in indices:
             mostrar_participante(array_nombres, matriz_puntajes, i)
             print("")
         return True
     return False
 
-def mostrar_ganador(array_nombres: list, matriz_puntajes: list) -> bool:
+def mostrar_ganador(array_nombres: list, matriz_puntajes: list) -> list:
+    """
+    Muestra el participante ganador (mayor promedio). Retorna lista de tuplas (índice, promedio) de ganadores.
+    """
     if array_nombres and matriz_puntajes:
         promedios = [0] * len(array_nombres)
         for i in range(len(array_nombres)):
             promedios[i] = calcular_promedio(sumar_fila(matriz_puntajes, i), len(matriz_puntajes[0]))
-        # Buscar el mayor promedio
+        
+        # Buscar el mayor promedio manualmente
         max_promedio = promedios[0]
-        for i in range(1, len(promedios)):
-            if promedios[i] > max_promedio:
-                max_promedio = promedios[i]
-        # Contar cuántos tienen el mayor promedio
-        cantidad_ganadores = 0
-        indice_ganador = -1
+        for prom in promedios:
+            if prom > max_promedio:
+                max_promedio = prom
+        
+        # Recolectar índices de participantes con el mayor promedio
+        ganadores = []
+        contador = 0
         for i in range(len(promedios)):
             if promedios[i] == max_promedio:
-                cantidad_ganadores += 1
-                indice_ganador = i
-        if cantidad_ganadores == 1:
+                ganadores += [(i, max_promedio)]  # Usar concatenación en lugar de append
+                contador += 1
+        
+        # Mostrar resultado
+        if contador == 1:
             print("El ganador es:")
-            mostrar_participante(array_nombres, matriz_puntajes, indice_ganador)
-            return True
+            mostrar_participante(array_nombres, matriz_puntajes, ganadores[0][0])
         else:
             print("Hay más de un participante con el mayor puntaje promedio. Debe realizarse un desempate.")
-            return False
+        
+        return ganadores
     print("No hay participantes para mostrar ganador.")
-    return False
+    return []
 
-def desempatar(array_nombres: list, matriz_puntajes: list) -> bool:
+def desempatar(array_nombres: list, matriz_puntajes: list) -> tuple:
+    """
+    Realiza un desempate aleatorio entre participantes con el mayor promedio.
+    Retorna tupla (índice, promedio) del ganador o None si no hay empate.
+    """
     if array_nombres and matriz_puntajes:
         promedios = [0] * len(array_nombres)
         for i in range(len(array_nombres)):
             promedios[i] = calcular_promedio(sumar_fila(matriz_puntajes, i), len(matriz_puntajes[0]))
+        
         # Buscar el mayor promedio
         max_promedio = promedios[0]
-        for i in range(1, len(promedios)):
-            if promedios[i] > max_promedio:
-                max_promedio = promedios[i]
-        # Guardar los índices de los ganadores
-        indices_ganadores = [0] * len(array_nombres)
-        cantidad_ganadores = 0
+        for prom in promedios:
+            if prom > max_promedio:
+                max_promedio = prom
+        
+        # Recolectar índices de ganadores
+        indices_ganadores = []
+        contador = 0
         for i in range(len(promedios)):
             if promedios[i] == max_promedio:
-                indices_ganadores[cantidad_ganadores] = i
-                cantidad_ganadores += 1
-        if cantidad_ganadores > 1:
-            elegido = random.randint(0, cantidad_ganadores - 1)
+                indices_ganadores += [i]  # Usar concatenación en lugar de append
+                contador += 1
+        
+        if contador > 1:
+            # Elegir aleatoriamente un ganador
+            elegido = random.randint(0, contador - 1)
             print("El ganador por desempate es:")
             mostrar_participante(array_nombres, matriz_puntajes, indices_ganadores[elegido])
-            return True
+            return (indices_ganadores[elegido], max_promedio)
         else:
             print("No hay empate para desempatar.")
-            return False
+            return None
     print("No hay participantes para desempatar.")
-    return False
+    return None
 
