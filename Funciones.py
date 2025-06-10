@@ -1,9 +1,6 @@
 import random
 from Inputs import *
 
-from Inputs import validar_nombre
-from Inputs import validar_puntaje
-
 def crear_matriz(cantidad_filas: int, cantidad_columnas: int, valor_inicial: any) -> list:
     """
     Crea una matriz de filas x columnas con un valor inicial.
