@@ -13,7 +13,7 @@ while True:
     print("2. Cargar Puntuaciones")
     print("3. Mostrar Puntuaciones")
     print("4. Mostrar Participantes con promedio menor a 4")
-    print("5. Mostrar Participantes con promedio mayor a 8")
+    print("5. Mostrar Participantes con promedio menor a 8")
     print("6. Mostrar Promedio de cada Jurado")
     print("7. Mostrar Jurado más estricto")
     print("8. Mostrar Jurado más generoso")
